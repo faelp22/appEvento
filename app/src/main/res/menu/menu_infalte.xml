@@ -22,6 +22,10 @@
                 android:id="@+id/localizacao"
                 app:showAsAction="always"
                 android:icon="@drawable/ic_mapa"/>
+            <item android:id="@+id/proximos_eventos"
+                android:title="Lista de Eventos"
+                app:showAsAction="always"
+                android:icon="@drawable/ic_eventos"/>
         </menu>
     </item>
 </menu>

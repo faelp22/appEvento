@@ -2,17 +2,12 @@ package com.example.droid02.appevento;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.droid02.appevento.dao.ParticipanteDAO;
@@ -22,9 +17,9 @@ import com.example.droid02.appevento.modelo.Participante;
 import java.io.File;
 
 public class FormularioActivity extends AppCompatActivity {
+    private static final int CODIGO_CAMERA = 3478;
     private FormularioHelper helper;
     private String caminhoFoto;
-    private static final int CODIGO_CAMERA = 3478;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +44,21 @@ public class FormularioActivity extends AppCompatActivity {
                 Participante participanteDoFormulario = helper.getParticipanteDoFormulario();
                 ParticipanteDAO dao = new ParticipanteDAO(FormularioActivity.this);
 
-                if (participanteSelecionado != null){
+                if (participanteSelecionado != null) {
                     participanteDoFormulario.setId(participanteSelecionado.getId());
+
+                    if (participanteSelecionado.getCaminhoFoto() != null && !participanteSelecionado.getCaminhoFoto().isEmpty()) {
+                        File file = new File(participanteSelecionado.getCaminhoFoto());
+                        if (file.exists() && participanteDoFormulario.getCaminhoFoto() != participanteSelecionado.getCaminhoFoto()) {
+                            file.delete();
+                        }
+                    }
+
                     dao.alterar(participanteDoFormulario);
-                    Toast.makeText(FormularioActivity.this, "Participante Alterado!",Toast.LENGTH_SHORT).show();
-                }else {
+                    Toast.makeText(FormularioActivity.this, "Participante Alterado!", Toast.LENGTH_SHORT).show();
+                } else {
                     dao.inserir(participanteDoFormulario);
-                    Toast.makeText(FormularioActivity.this, "Participante Salvo!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FormularioActivity.this, "Participante Salvo!", Toast.LENGTH_SHORT).show();
                 }
 
                 dao.close();
@@ -77,8 +80,8 @@ public class FormularioActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == Activity.RESULT_OK){
-            if (requestCode == CODIGO_CAMERA){
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == CODIGO_CAMERA) {
                 helper.carregaImagem(caminhoFoto);
             }
         }

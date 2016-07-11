@@ -14,11 +14,11 @@ public class Participante implements Serializable {
     private String endereco;
     private String caminhoFoto;
 
-    public Long getId(){
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long id){
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -64,6 +64,6 @@ public class Participante implements Serializable {
 
     @Override
     public String toString() {
-        return getId()+" - "+getNome();
+        return getId() + " - " + getNome();
     }
 }

@@ -4,25 +4,22 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.droid02.appevento.adapters.ParticipanteAdapter;
 import com.example.droid02.appevento.dao.ParticipanteDAO;
 import com.example.droid02.appevento.modelo.Participante;
 
-import java.io.File;
 import java.util.List;
 
 public class ListaParticipantesActivity extends AppCompatActivity {
@@ -35,7 +32,9 @@ public class ListaParticipantesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_participantes);
+
         this.listaParticipantes = (ListView) findViewById(R.id.lista_participantes);
+
         registerForContextMenu(listaParticipantes);
 
         this.listaParticipantes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -95,7 +94,7 @@ public class ListaParticipantesActivity extends AppCompatActivity {
                 if (ActivityCompat.checkSelfPermission(ListaParticipantesActivity.this, Manifest.permission.CALL_PHONE)
                         != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(ListaParticipantesActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 1);
-                }else {
+                } else {
                     Intent intentLigar = new Intent(Intent.ACTION_CALL);
                     intentLigar.setData(Uri.parse("tel:" + participante.getTelefone()));
                     startActivity(intentLigar);
@@ -106,27 +105,21 @@ public class ListaParticipantesActivity extends AppCompatActivity {
         });
 
         Intent itemMapa = new Intent(Intent.ACTION_VIEW);
-        itemMapa.setData(Uri.parse("geo:0,0?q="+Uri.encode(participante.getEndereco())));
+        itemMapa.setData(Uri.parse("geo:0,0?q=" + Uri.encode(participante.getEndereco())));
         menuMapa.setIntent(itemMapa);
 
         Intent itemSMS = new Intent(Intent.ACTION_VIEW);
-        itemSMS.setData(Uri.parse("sms:"+participante.getTelefone()));
+        itemSMS.setData(Uri.parse("sms:" + participante.getTelefone()));
         menuSMS.setIntent(itemSMS);
 
-        deletar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener(){
+        deletar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 ParticipanteDAO dao = new ParticipanteDAO(ListaParticipantesActivity.this);
-
-                if(participante.getCaminhoFoto() != null && !participante.getCaminhoFoto().isEmpty()) {
-                    File file = new File(participante.getCaminhoFoto());
-                    file.delete();
-                }
-
                 dao.deletar(participante);
                 dao.close();
                 carregarListaParticipantes();
-                Snackbar.make(listaParticipantes, participante.getNome()+" Deletar com sucesso!", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(listaParticipantes, participante.getNome() + " Deletar com sucesso!", Snackbar.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -136,10 +129,14 @@ public class ListaParticipantesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.novo:
                 Intent intent = new Intent(ListaParticipantesActivity.this, FormularioActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.proximos_eventos:
+                Intent intentEventos = new Intent(this, EventosActivity.class);
+                startActivity(intentEventos);
                 break;
             default:
                 break;
@@ -147,7 +144,7 @@ public class ListaParticipantesActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void carregarListaParticipantes(){
+    private void carregarListaParticipantes() {
         ParticipanteDAO dao = new ParticipanteDAO(ListaParticipantesActivity.this);
         List<Participante> participantes = dao.getLista();
         adapter = new ParticipanteAdapter(this, participantes);

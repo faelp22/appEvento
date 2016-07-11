@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by droid02 on 11/06/16.
  */
-public class ParticipanteDAO extends SQLiteOpenHelper{
+public class ParticipanteDAO extends SQLiteOpenHelper {
 
     private static final String DATABASE = "appEventos";
     private static final int VERSAO = 3;
@@ -40,7 +40,8 @@ public class ParticipanteDAO extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         String sql = "";
-        switch (oldVersion){
+
+        switch (oldVersion) {
             case 1:
                 sql = "ALTER TABLE " + TABELA + " ADD COLUMN endereco TEXT;";
                 db.execSQL(sql);
@@ -50,7 +51,7 @@ public class ParticipanteDAO extends SQLiteOpenHelper{
         }
     }
 
-    public void inserir(Participante participante){
+    public void inserir(Participante participante) {
         ContentValues values = new ContentValues();
         values.put("nome", participante.getNome());
         values.put("email", participante.getEmail());
@@ -60,14 +61,14 @@ public class ParticipanteDAO extends SQLiteOpenHelper{
         getWritableDatabase().insert(TABELA, null, values);
     }
 
-    public List<Participante> getLista(){
+    public List<Participante> getLista() {
         List<Participante> lista = new ArrayList<>();
         String sql = "SELECT * FROM " + TABELA + ";";
-        Cursor c = getReadableDatabase().rawQuery(sql,null);
+        Cursor c = getReadableDatabase().rawQuery(sql, null);
 
         Participante participante = null;
 
-        while (c.moveToNext()){
+        while (c.moveToNext()) {
             participante = new Participante();
             participante.setId(c.getLong(c.getColumnIndex("id")));
             participante.setNome(c.getString(c.getColumnIndex("nome")));
@@ -81,7 +82,7 @@ public class ParticipanteDAO extends SQLiteOpenHelper{
         return lista;
     }
 
-    public void alterar(Participante participante){
+    public void alterar(Participante participante) {
         ContentValues values = new ContentValues();
         values.put("nome", participante.getNome());
         values.put("email", participante.getEmail());
@@ -97,6 +98,16 @@ public class ParticipanteDAO extends SQLiteOpenHelper{
     public void deletar(Participante participante) {
         String[] argumentos = {participante.getId().toString()};
         getWritableDatabase().delete(TABELA, "id=?", argumentos);
+    }
+
+    public boolean ehParticipante(String telefone) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor c = db.rawQuery("SELECT * FROM " + TABELA
+                + " WHERE telefone = ?", new String[]{telefone});
+        int resultado = c.getCount();
+        c.close();
+        return resultado > 0;
     }
 
 }

@@ -22,7 +22,7 @@ public class FormularioHelper {
 
     private Participante participante;
 
-    public FormularioHelper(FormularioActivity activity){
+    public FormularioHelper(FormularioActivity activity) {
         participante = new Participante();
         campoNome = (EditText) activity.findViewById(R.id.edt_nome);
         campoEmail = (EditText) activity.findViewById(R.id.edt_email);
@@ -31,7 +31,7 @@ public class FormularioHelper {
         campoFoto = (ImageView) activity.findViewById(R.id.formulario_foto);
     }
 
-    public Participante getParticipanteDoFormulario(){
+    public Participante getParticipanteDoFormulario() {
 
         participante.setNome(campoNome.getText().toString());
         participante.setEmail(campoEmail.getText().toString());
@@ -43,7 +43,7 @@ public class FormularioHelper {
         return participante;
     }
 
-    public void carregarParticipanteNoFormulario(Participante participante){
+    public void carregarParticipanteNoFormulario(Participante participante) {
         this.campoNome.setText(participante.getNome());
         this.campoEmail.setText(participante.getEmail());
         this.campoTelefone.setText(participante.getTelefone());
@@ -51,8 +51,8 @@ public class FormularioHelper {
         carregaImagem(participante.getCaminhoFoto());
     }
 
-    public void carregaImagem(String caminhoFoto){
-        if(caminhoFoto != null) {
+    public void carregaImagem(String caminhoFoto) {
+        if (caminhoFoto != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(caminhoFoto);
             Bitmap bitmapReduzido = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
 
