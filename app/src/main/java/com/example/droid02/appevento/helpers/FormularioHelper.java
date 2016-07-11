@@ -9,6 +9,8 @@ import com.example.droid02.appevento.FormularioActivity;
 import com.example.droid02.appevento.R;
 import com.example.droid02.appevento.modelo.Participante;
 
+import java.io.File;
+
 /**
  * Created by droid02 on 11/06/16.
  */
@@ -52,14 +54,17 @@ public class FormularioHelper {
     }
 
     public void carregaImagem(String caminhoFoto) {
-        if (caminhoFoto != null) {
-            Bitmap bitmap = BitmapFactory.decodeFile(caminhoFoto);
-            Bitmap bitmapReduzido = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
+        if (caminhoFoto != null && !caminhoFoto.isEmpty()) {
+            File file = new File(caminhoFoto);
+            if (file.exists()) {
+                Bitmap bitmap = BitmapFactory.decodeFile(caminhoFoto);
+                Bitmap bitmapReduzido = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
 
-            campoFoto.setImageBitmap(bitmapReduzido);
-            campoFoto.setScaleType(ImageView.ScaleType.FIT_XY);
+                campoFoto.setImageBitmap(bitmapReduzido);
+                campoFoto.setScaleType(ImageView.ScaleType.FIT_XY);
 
-            campoFoto.setTag(caminhoFoto);
+                campoFoto.setTag(caminhoFoto);
+            }
         }
     }
 }
